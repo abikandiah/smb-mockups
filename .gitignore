@@ -1,0 +1,7 @@
+.env
+/storage/
+/snapshots/
+.generated-credentials
+__pycache__/
+*.pyc
+
