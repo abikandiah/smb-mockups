@@ -32,11 +32,13 @@ def write(container: str, share: str, filename: str, content: str):
     with tempfile.NamedTemporaryFile(mode="w", suffix=f"-{filename}", delete=False) as f:
         f.write(content)
         tmp = f.name
-    dest = f"/storage/{share}/{filename}"
-    run(["docker", "exec", container, "mkdir", "-p", f"/storage/{share}"])
-    run(["docker", "cp", tmp, f"{container}:{dest}"])
-    os.unlink(tmp)
-    print(f"  {container}:{dest}")
+    try:
+        dest = f"/storage/{share}/{filename}"
+        run(["docker", "exec", container, "mkdir", "-p", f"/storage/{share}"])
+        run(["docker", "cp", tmp, f"{container}:{dest}"])
+        print(f"  {container}:{dest}")
+    finally:
+        os.unlink(tmp)
 
 
 def csv_str(rows: list) -> str:

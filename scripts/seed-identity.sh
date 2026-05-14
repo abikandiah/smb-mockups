@@ -11,11 +11,15 @@ CREDS_FILE=".generated-credentials"
 
 if [[ "$PROFILE" == "flat" ]]; then
   CONTAINER="samba-nas"
+  # servercontainers/samba is Alpine-based: addgroup/adduser, not groupadd/useradd
+  for group in "${GROUPS[@]}"; do
+    docker exec "$CONTAINER" addgroup "$group" 2>/dev/null || true
+  done
   for i in $(seq 1 10); do
     username="user$(printf '%02d' $i)"
     password=$(openssl rand -base64 12 | tr -dc 'A-Za-z0-9' | head -c 16)
     dept=${GROUPS[$((RANDOM % ${#GROUPS[@]}))]}
-    docker exec "$CONTAINER" useradd -M -s /sbin/nologin "$username" 2>/dev/null || true
+    docker exec "$CONTAINER" adduser -D -H -s /sbin/nologin -G "$dept" "$username" 2>/dev/null || true
     printf '%s\n%s\n' "$password" "$password" | \
       docker exec -i "$CONTAINER" smbpasswd -a -s "$username" 2>/dev/null || true
     printf '%s:%s:%s\n' "$username" "$password" "$dept" >> "$CREDS_FILE"

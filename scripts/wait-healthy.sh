@@ -3,7 +3,8 @@ set -euo pipefail
 
 PROFILE="${1:-flat}"
 CONTAINER=$( [[ "$PROFILE" == "flat" ]] && echo "samba-nas" || echo "samba-fileserver" )
-MAX_WAIT=120
+# Standard profile: DC provision (~45s) + fileserver domain join (~70s) = 230s worst case
+MAX_WAIT=$( [[ "$PROFILE" == "flat" ]] && echo 120 || echo 360 )
 ELAPSED=0
 
 echo "Waiting for $CONTAINER to be healthy..."
