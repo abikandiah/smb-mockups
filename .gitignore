@@ -4,4 +4,5 @@
 .generated-credentials
 __pycache__/
 *.pyc
+env-profiles/profile-standard/smb.conf
 

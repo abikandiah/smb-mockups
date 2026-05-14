@@ -1,7 +1,7 @@
 [global]
-   workgroup = CORP
+   workgroup = ${DOMAIN}
    security = ADS
-   realm = CORP.INTERNAL
+   realm = ${DOMAIN_FQDN}
    log level = 1
    map to guest = bad user
 
