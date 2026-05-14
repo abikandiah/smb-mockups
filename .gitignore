@@ -1,6 +1,6 @@
 .env
 /storage/
-/snapshots/
+/snapshots/*.tar.gz
 .generated-credentials
 __pycache__/
 *.pyc

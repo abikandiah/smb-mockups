@@ -1,0 +1,29 @@
+services:
+  samba-nas:
+    image: ${SAMBA_IMAGE}
+    container_name: samba-nas
+    hostname: samba-nas
+    volumes:
+      - nas-finance:/storage/finance
+      - nas-engineering:/storage/engineering
+      - nas-hr:/storage/hr
+      - ./smb.conf:/etc/samba/smb.conf:ro
+    networks:
+      - smb_test_bridge
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 445 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 8
+      start_period: 15s
+    restart: "no"
+
+volumes:
+  nas-finance:
+  nas-engineering:
+  nas-hr:
+
+networks:
+  smb_test_bridge:
+    external: true
+    name: ${SMB_BRIDGE}

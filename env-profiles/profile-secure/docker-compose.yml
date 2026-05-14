@@ -1,0 +1,20 @@
+# Profile 3: Segmented Network (Zero-Trust)
+#
+# Topology:
+#   smb_test_bridge (agent access)
+#           │
+#      ┌────┴────┐
+#      │  router │  (Alpine + nftables, NET_ADMIN cap required)
+#      └────┬────┘
+#      ┌────┴────────────────┐
+#      │                     │
+#   subnet-finance       subnet-engineering
+#   192.168.40.0/24      192.168.50.0/24
+#      │                     │
+#   samba-finance        samba-engineering
+#   (also: samba-hr on subnet-hr 192.168.60.0/24)
+#
+# Each department Samba instance is isolated on its own subnet. Agents on
+# smb_test_bridge must route through the router container to reach any share.
+#
+# Implementation deferred until profile-standard passes make probe.

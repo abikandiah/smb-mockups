@@ -1,0 +1,73 @@
+services:
+  samba-dc:
+    build:
+      context: .
+      dockerfile: dc.Dockerfile
+    container_name: samba-dc
+    hostname: dc
+    environment:
+      SAMBA_DOMAIN: ${DOMAIN}
+      SAMBA_REALM: ${DOMAIN_FQDN}
+      SAMBA_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - dc-data:/var/lib/samba
+      - dc-config:/etc/samba
+    networks:
+      internal:
+        ipv4_address: 192.168.10.2
+      smb_test_bridge:
+    cap_add:
+      - SYS_TIME
+    healthcheck:
+      test: ["CMD-SHELL", "samba-tool domain info ${DOMAIN_FQDN} >/dev/null 2>&1"]
+      interval: 15s
+      timeout: 10s
+      retries: 8
+      start_period: 45s
+    restart: "no"
+
+  samba-fileserver:
+    image: ${SAMBA_IMAGE}
+    container_name: samba-fileserver
+    hostname: fileserver
+    environment:
+      MODEL: member
+      SAMBA_DOMAIN: ${DOMAIN_FQDN}
+      SAMBA_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    dns:
+      - 192.168.10.2
+    volumes:
+      - fs-finance:/storage/finance
+      - fs-engineering:/storage/engineering
+      - fs-hr:/storage/hr
+      - ./smb.conf:/etc/samba/smb.conf:ro
+    networks:
+      - internal
+      - smb_test_bridge
+    depends_on:
+      samba-dc:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 445 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: "no"
+
+volumes:
+  dc-data:
+  dc-config:
+  fs-finance:
+  fs-engineering:
+  fs-hr:
+
+networks:
+  internal:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.10.0/24
+  smb_test_bridge:
+    external: true
+    name: ${SMB_BRIDGE}

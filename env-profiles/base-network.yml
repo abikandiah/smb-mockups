@@ -1,0 +1,4 @@
+networks:
+  smb_test_bridge:
+    external: true
+    name: ${SMB_BRIDGE}
