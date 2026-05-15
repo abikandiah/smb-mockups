@@ -45,6 +45,11 @@ def bulk_write(container: str, share: str, file_tree: dict):
             dest.write_text(content)
         run(["docker", "exec", container, "mkdir", "-p", f"/storage/{share}"])
         run(["docker", "cp", f"{tmp}/.", f"{container}:/storage/{share}"])
+    # Fix group ownership so Samba group ACLs allow writes
+    run(["docker", "exec", container, "sh", "-c",
+         f"chown root:{share} /storage/{share} && chmod 0775 /storage/{share} && "
+         f"find /storage/{share} -mindepth 1 -type d -exec chgrp {share} {{}} \\; -exec chmod g+rwx {{}} \\; && "
+         f"find /storage/{share} -mindepth 1 -type f -exec chgrp {share} {{}} \\; -exec chmod g+rw  {{}} \\;"])
     print(f"  {container}:/storage/{share}/ ({len(file_tree)} files)")
 
 
