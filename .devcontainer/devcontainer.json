@@ -27,6 +27,6 @@
   ],
 
   // Only use postCreateCommand for local project dependencies, not global CLIs
-  "postCreateCommand": "if [ -f requirements.txt ]; then pip3 install --user -r requirements.txt; fi",
+  "postCreateCommand": "pip3 install --user -r requirements.txt -e /workspaces/smb-mcp -e /workspaces/aria",
   "remoteUser": "vscode"
 }
