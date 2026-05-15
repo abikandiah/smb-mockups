@@ -1,0 +1,16 @@
+{
+  "folders": [
+    {
+      "name": "smb-mockups",
+      "path": "/workspaces/smb-mockups",
+    },
+    {
+      "name": "smb-mcp",
+      "path": "/workspaces/smb-mcp",
+    },
+    {
+      "name": "aria",
+      "path": "/workspaces/aria",
+    },
+  ],
+}

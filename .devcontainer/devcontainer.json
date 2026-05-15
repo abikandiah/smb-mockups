@@ -21,9 +21,11 @@
   "mounts": [
     "source=${localEnv:HOME}/.claude,target=/home/vscode/.claude,type=bind,consistency=cached",
     "source=${localEnv:HOME}/.claude.json,target=/home/vscode/.claude.json,type=bind,consistency=cached",
-    "source=${localEnv:HOME}/.gemini,target=/home/vscode/.gemini,type=bind,consistency=cached"
+    "source=${localEnv:HOME}/.gemini,target=/home/vscode/.gemini,type=bind,consistency=cached",
+    "source=${localWorkspaceFolder}/../smb-mcp,target=/workspaces/smb-mcp,type=bind,consistency=cached",
+    "source=${localWorkspaceFolder}/../aria,target=/workspaces/aria,type=bind,consistency=cached"
   ],
-  
+
   // Only use postCreateCommand for local project dependencies, not global CLIs
   "postCreateCommand": "if [ -f requirements.txt ]; then pip3 install --user -r requirements.txt; fi",
   "remoteUser": "vscode"
