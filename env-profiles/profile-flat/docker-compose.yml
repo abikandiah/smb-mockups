@@ -7,7 +7,7 @@ services:
       - nas-finance:/storage/finance
       - nas-engineering:/storage/engineering
       - nas-hr:/storage/hr
-      - ./smb.conf:/etc/samba/smb.conf:ro
+      - ./profile-flat/smb.conf:/etc/samba/smb.conf:ro
     networks:
       - smb_test_bridge
     healthcheck:

@@ -40,7 +40,7 @@ services:
       - fs-finance:/storage/finance
       - fs-engineering:/storage/engineering
       - fs-hr:/storage/hr
-      - ./smb.conf:/etc/samba/smb.conf:ro
+      - ./profile-standard/smb.conf:/etc/samba/smb.conf:ro
     networks:
       - internal
       - smb_test_bridge
